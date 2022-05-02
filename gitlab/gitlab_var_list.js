@@ -1,6 +1,6 @@
 require('dotenv').config();
 const private_token = process.env.GITLAB_TOKEN;
-const project_id = "14175408";
+const project_id = "35812162";
 
 const axios = require('axios');
 const config = {
@@ -9,7 +9,7 @@ const config = {
     }
 }
 
-axios.get(`https://gitlab.com/api/v4/projects/${project_id}/variables`, config).then( res => {
+axios.get(`https://gitlab.com/api/v4/projects/${project_id}/variables`, config).then(res => {
     let map = {};
     res.data.forEach(gitVar => {
         const { environment_scope, key, value } = gitVar;
@@ -22,11 +22,11 @@ axios.get(`https://gitlab.com/api/v4/projects/${project_id}/variables`, config).
             value
         })
     });
-    
+
     for (const mkey in map) {
         console.log(`\n########################`);
         console.log(`[${mkey}]`)
-        map[mkey].forEach( elem => {
+        map[mkey].forEach(elem => {
             const { key, value } = elem;
             console.log(`${key}=${value}`)
         });
