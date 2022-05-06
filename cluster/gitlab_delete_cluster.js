@@ -1,6 +1,6 @@
 require('dotenv').config();
 const private_token = process.env.GITLAB_TOKEN;
-const project_id = "35812162";
+const project_id = "14175408";
 
 const axios = require('axios');
 const config = {
@@ -14,9 +14,16 @@ const keys = [
     "CI_AWS_ECS_SERVICE",
     "CI_AWS_ECS_TASK_DEFINITION"
 ];
+const envs = [
+    '*',
+    'review/sbox',
+    'review/dev'
+];
 
-keys.forEach(key => {
-    axios.delete(`https://gitlab.com/api/v4/projects/${project_id}/variables/${key}`, config).then(res => {
-        console.log(res.status);
+envs.forEach(env => {
+    keys.forEach(key => {
+        axios.delete(`https://gitlab.com/api/v4/projects/${project_id}/variables/${key}?filter[environment_scope]=${env}`, config).then(res => {
+            console.log(res.status);
+        });
     });
-});
+})

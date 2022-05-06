@@ -9,47 +9,66 @@ const config = {
 }
 
 
-const project_id = "35812162";
-const cluster_id = "ce-prod";
-const service_id = "keycloak";
-const task_id = "keycloak";
-const env = "*";
+const project_id = "14175408";
+const taskName = "goldilocks";
+const cluster_ids = [
+    "ce-prod",
+    "ce-sbox",
+    "ce-dev"
+];
+const service_ids = [
+    `${taskName}-prod`,
+    `${taskName}-sbox`,
+    `${taskName}-dev`,
+];
+const task_ids = [
+    `${taskName}-prod`,
+    `${taskName}-sbox`,
+    `${taskName}-dev`,
+];
+const envs = [
+    '*',
+    'review/sbox',
+    'review/dev'
+];
 
-const body = {
-    "variable_type": "env_var",
-    "key": "",
-    "value": "",
-    "protected": true,
-    "masked": false,
-    "environment_scope": env
-}
+envs.forEach((env, i) => {
+    const body = {
+        "variable_type": "env_var",
+        "key": "",
+        "value": "",
+        "protected": true,
+        "masked": false,
+        "environment_scope": env
+    }
 
-const cluster_body = {
-    ...body,
-    key: 'CI_AWS_ECS_CLUSTER',
-    value: cluster_id
-}
+    const cluster_body = {
+        ...body,
+        key: 'CI_AWS_ECS_CLUSTER',
+        value: cluster_ids[i]
+    }
 
-const service_body = {
-    ...body,
-    key: 'CI_AWS_ECS_SERVICE',
-    value: service_id
-}
+    const service_body = {
+        ...body,
+        key: 'CI_AWS_ECS_SERVICE',
+        value: service_ids[i]
+    }
 
-const task_body = {
-    ...body,
-    key: 'CI_AWS_ECS_TASK_DEFINITION',
-    value: task_id
-}
+    const task_body = {
+        ...body,
+        key: 'CI_AWS_ECS_TASK_DEFINITION',
+        value: task_ids[i]
+    }
 
-const bodies = [
-    cluster_body,
-    service_body,
-    task_body
-]
+    const bodies = [
+        cluster_body,
+        service_body,
+        task_body
+    ]
 
-bodies.forEach(element => {
-    axios.post(`https://gitlab.com/api/v4/projects/${project_id}/variables`, element, config).then(res => {
-        console.log(res.data);
+    bodies.forEach(element => {
+        axios.post(`https://gitlab.com/api/v4/projects/${project_id}/variables`, element, config).then(res => {
+            console.log(res.data);
+        });
     });
 });
