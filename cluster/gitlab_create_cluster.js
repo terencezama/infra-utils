@@ -9,8 +9,8 @@ const config = {
 }
 
 
-const project_id = "14175408";
-const taskName = "goldilocks";
+const project_id = "27985071";
+const taskName = "ganbatte";
 const cluster_ids = [
     "ce-prod",
     "ce-sbox",
@@ -20,17 +20,32 @@ const service_ids = [
     `${taskName}-prod`,
     `${taskName}-sbox`,
     `${taskName}-dev`,
+    // taskName
 ];
 const task_ids = [
     `${taskName}-prod`,
     `${taskName}-sbox`,
     `${taskName}-dev`,
+    // taskName
 ];
 const envs = [
     '*',
     'review/sbox',
     'review/dev'
 ];
+
+const s3_envs = [
+    `s3://ce-cicd/${taskName}_prod.env`,
+    `s3://ce-cicd/${taskName}_sbox.env`,
+    `s3://ce-cicd/${taskName}_dev.env`,
+]
+
+
+const sonar = {
+    isEnable: true,
+    host: 'https://sonarcloud.io',
+    token: '353e469aa85e6661d013debc1019afe59dcf6875'
+}
 
 envs.forEach((env, i) => {
     const body = {
@@ -60,10 +75,34 @@ envs.forEach((env, i) => {
         value: task_ids[i]
     }
 
+    const otherBodies = [];
+
+    if (s3_envs.length > 0) {
+        otherBodies.push({
+            ...body,
+            key: 'S3_ENV',
+            value: s3_envs[i]
+        })
+    }
+
+    if (sonar.isEnable) {
+        otherBodies.push({
+            ...body,
+            key: 'SONAR_HOST_URL',
+            value: sonar.host
+        })
+        otherBodies.push({
+            ...body,
+            key: 'SONAR_TOKEN',
+            value: sonar.token
+        })
+    }
+
     const bodies = [
         cluster_body,
         service_body,
-        task_body
+        task_body,
+        ...otherBodies
     ]
 
     bodies.forEach(element => {

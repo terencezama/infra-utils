@@ -1,6 +1,6 @@
 require('dotenv').config();
 const private_token = process.env.GITLAB_TOKEN;
-const project_id = "14175408";
+const project_id = "27985071";
 
 const axios = require('axios');
 const config = {
@@ -12,7 +12,11 @@ const config = {
 const keys = [
     "CI_AWS_ECS_CLUSTER",
     "CI_AWS_ECS_SERVICE",
-    "CI_AWS_ECS_TASK_DEFINITION"
+    "CI_AWS_ECS_TASK_DEFINITION",
+    "S3_ENV",
+    "SONAR_HOST_URL",
+    "SONAR_TOKEN"
+
 ];
 const envs = [
     '*',
